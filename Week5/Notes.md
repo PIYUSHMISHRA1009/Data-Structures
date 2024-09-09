@@ -15,7 +15,7 @@ This strategy states that the element that is inserted last will come out first.
 
 Stack follows LIFO (Last In First Out) Principle so the element which is pushed last is popped first.
 
-(!image)(https://github.com/user-attachments/assets/d3f278a6-d7bf-48c4-b18b-445c0d0be5a6)
+![image](https://github.com/user-attachments/assets/d3f278a6-d7bf-48c4-b18b-445c0d0be5a6)
 
 **Types of Stack Data Structure:**
 
