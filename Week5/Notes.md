@@ -43,7 +43,7 @@ Algorithm for Push Operation:
 ->Otherwise, we increment the value of top by 1 (top = top + 1) and the new value is inserted at top position .
 ->The elements can be pushed into the stack till we reach the capacity of the stack.
 
-![e3084c392f097db637a9da81b15255c9](https://github.com/user-attachments/assets/7cc68f82-91db-4ccb-8b43-63650da62c99)
+(https://media.geeksforgeeks.org/wp-content/uploads/20240606180844/Push-Operation-in-Stack-(1)-1024.webp)
 
 **Pop Operation in Stack Data Structure:**
 
