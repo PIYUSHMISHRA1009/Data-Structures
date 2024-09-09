@@ -43,7 +43,7 @@ Algorithm for Push Operation:
 ->Otherwise, we increment the value of top by 1 (top = top + 1) and the new value is inserted at top position .
 ->The elements can be pushed into the stack till we reach the capacity of the stack.
 
-(https://media.geeksforgeeks.org/wp-content/uploads/20240606180844/Push-Operation-in-Stack-(1)-1024.webp)
+![image](https://media.geeksforgeeks.org/wp-content/uploads/20240606180844/Push-Operation-in-Stack-(1)-1024.webp)
 
 **Pop Operation in Stack Data Structure:**
 
@@ -56,7 +56,7 @@ If the stack is empty (top == -1), then Stack Underflows and we cannot remove an
 Otherwise, we store the value at top, decrement the value of top by 1 (top = top – 1) and return the stored top value.
 
 
-(https://media.geeksforgeeks.org/wp-content/uploads/20240606180943/Pop-Operation-in-Stack-(1)-1024.webp)
+![image](https://media.geeksforgeeks.org/wp-content/uploads/20240606180943/Pop-Operation-in-Stack-(1)-1024.webp)
 
 **Top or Peek Operation in Stack Data Structure:**
 
@@ -68,7 +68,7 @@ Before returning the top element from the stack, we check if the stack is empty.
 If the stack is empty (top == -1), we simply print “Stack is empty”.
 Otherwise, we return the element stored at index = top .
 
-(https://github.com/user-attachments/assets/89d8ded3-9905-4333-91fa-940ae8c4a155)
+![image](https://github.com/user-attachments/assets/89d8ded3-9905-4333-91fa-940ae8c4a155)
 
 **isEmpty Operation in Stack Data Structure:**
 Returns true if the stack is empty, else false.
@@ -79,7 +79,7 @@ Check for the value of top in stack.
 If (top == -1) , then the stack is empty so return true .
 Otherwise, the stack is not empty so return false .
 
-(https://media.geeksforgeeks.org/wp-content/uploads/20240606181101/isEmpty-Operation-in-Stack-(1)-1024.webp)
+![image](https://media.geeksforgeeks.org/wp-content/uploads/20240606181101/isEmpty-Operation-in-Stack-(1)-1024.webp)
 
 **isFull Operation in Stack Data Structure:**
 Returns true if the stack is full, else false.
@@ -90,7 +90,7 @@ Check for the value of top in stack.
 If (top == capacity-1), then the stack is full so return true.
 Otherwise, the stack is not full so return false.
 
-(https://media.geeksforgeeks.org/wp-content/uploads/20240606181147/isFull-Operation-in-Stack-(1)-1024.webp)
+![image](https://media.geeksforgeeks.org/wp-content/uploads/20240606181147/isFull-Operation-in-Stack-(1)-1024.webp)
 
 **Implementation of Stack Data Structure:**
 The basic operations that can be performed on a stack include push, pop, and peek. There are two ways to implement a stack –
