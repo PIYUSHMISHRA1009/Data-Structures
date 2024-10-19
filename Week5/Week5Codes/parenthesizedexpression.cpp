@@ -1,41 +1,75 @@
 #include <iostream>
-#include <stack>
-#include <string>
 
-bool isValidParentheses(const std::string& expression) {
-    std::stack<char> parenthesesStack;
+#define MAX 100
 
-    for (size_t i = 0; i < expression.length(); i++) {
-        char ch = expression[i];
-       
-        if (ch == '(') {
-            parenthesesStack.push(ch);
+using namespace std;
+
+class Stack {
+private:
+    char arr[MAX];
+    int top;
+
+public:
+    Stack() { top = -1; }
+
+    void push(char c) {
+        if (top >= MAX - 1) {
+            cout << "Stack overflow" << endl;
+            return;
         }
-       
-        else if (ch == ')') {
-            
-            if (parenthesesStack.empty()) {
+        arr[++top] = c;
+    }
+
+    char pop() {
+        if (top < 0) {
+            cout << "Stack underflow" << endl;
+            return '\0';
+        }
+        return arr[top--];
+    }
+
+    bool isEmpty() {
+        return top == -1;
+    }
+};
+
+bool isMatchingPair(char opening, char closing) {
+    return (opening == '(' && closing == ')') ||
+           (opening == '{' && closing == '}') ||
+           (opening == '[' && closing == ']');
+}
+
+bool checkParentheses(const char* expression) {
+    Stack stack;
+
+    for (int i = 0; expression[i] != '\0'; i++) {
+        char ch = expression[i];
+        if (ch == '(' || ch == '{' || ch == '[') {
+            stack.push(ch);
+        } else if (ch == ')' || ch == '}' || ch == ']') {
+            if (stack.isEmpty()) {
                 return false;
             }
-            
-            parenthesesStack.pop();
+            char lastOpening = stack.pop();
+            if (!isMatchingPair(lastOpening, ch)) {
+                return false;
+            }
         }
     }
 
-   
-    return parenthesesStack.empty();
+    return stack.isEmpty();
 }
 
 int main() {
-    std::string expression;
+    char expression[MAX];
 
-    std::cout << "Enter a parenthesized expression: ";
-    std::getline(std::cin, expression);
+    cout << "Enter a parenthesized expression: ";
+    cin.getline(expression, MAX);
 
-    if (isValidParentheses(expression)) {
-        std::cout << "The expression has properly matching parentheses." << std::endl;
+    if (checkParentheses(expression)) {
+        cout << "The parentheses are matched." << endl;
     } else {
-        std::cout << "The expression does not have properly matching parentheses." << std::endl;
+        cout << "The parentheses are not matched." << endl;
     }
 
     return 0;
