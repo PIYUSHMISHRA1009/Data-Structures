@@ -14,9 +14,10 @@ public:
 
     LinkedList() : head(nullptr) {}
 
-    void insertAtBeginning(int value) {
-        head = new Node(value);
-        head->next = head; // Point to itself if it's the only node
+       void insertAtBeginning(int value) {
+        Node* newNode = new Node(value);
+        newNode->next = head;
+        head = newNode;
     }
 
     void insertAtEnd(int value) {
