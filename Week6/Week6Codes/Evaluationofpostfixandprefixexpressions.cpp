@@ -1,94 +1,101 @@
 #include <iostream>
-#include <stack>
-#include <cctype>
-#include <cstdlib>
-#include <string>
-#include <algorithm>
+
+#define MAX 100
 
 using namespace std;
 
-// Function to evaluate postfix expressions
-int evaluatePostfix(const string& expression) {
-    stack<int> s;
-    string::const_iterator it = expression.begin();
-    
-    while (it != expression.end()) {
-        if (isdigit(*it)) {
-            s.push(*it - '0');
-        } else if (*it == ' ') {
-            // Skip spaces
+class Stack {
+private:
+    int arr[MAX];
+    int top;
+
+public:
+    Stack() { top = -1; }
+
+    void push(int value) {
+        if (top >= MAX - 1) {
+            cout << "Stack overflow" << endl;
+            return;
+        }
+        arr[++top] = value;
+    }
+
+    int pop() {
+        if (top < 0) {
+            cout << "Stack underflow" << endl;
+            return 0;
+        }
+        return arr[top--];
+    }
+
+    bool isEmpty() {
+        return top == -1;
+    }
+};
+
+int evaluatePostfix(char* postfix) {
+    Stack st;
+
+    for (int i = 0; postfix[i] != '\0'; i++) {
+        char c = postfix[i];
+
+        if (isdigit(c)) {
+            st.push(c - '0');
         } else {
-            int operand2 = s.top(); s.pop();
-            int operand1 = s.top(); s.pop();
-            switch (*it) {
-                case '+': s.push(operand1 + operand2); break;
-                case '-': s.push(operand1 - operand2); break;
-                case '*': s.push(operand1 * operand2); break;
-                case '/': s.push(operand1 / operand2); break;
-                default:
-                    cerr << "Unknown operator: " << *it << endl;
-                    exit(EXIT_FAILURE);
+            int operand2 = st.pop();
+            int operand1 = st.pop();
+            switch (c) {
+                case '+': st.push(operand1 + operand2); break;
+                case '-': st.push(operand1 - operand2); break;
+                case '*': st.push(operand1 * operand2); break;
+                case '/': st.push(operand1 / operand2); break;
+                case '^': st.push(pow(operand1, operand2)); break;
             }
         }
-        ++it;
     }
-    return s.top();
+
+    return st.pop();
 }
 
-// Function to evaluate prefix expressions
-int evaluatePrefix(const string& expression) {
-    stack<int> s;
-    string reversedExpr(expression.rbegin(), expression.rend());
-    string::const_iterator it = reversedExpr.begin();
-    
-    while (it != reversedExpr.end()) {
-        if (isdigit(*it)) {
-            s.push(*it - '0');
-        } else if (*it == ' ') {
-            // Skip spaces
+int evaluatePrefix(char* prefix) {
+    Stack st;
+
+    int length = 0;
+    for (int i = 0; prefix[i] != '\0'; i++) {
+        length++;
+    }
+
+    for (int i = length - 1; i >= 0; i--) {
+        char c = prefix[i];
+
+        if (isdigit(c)) {
+            st.push(c - '0');
         } else {
-            int operand1 = s.top(); s.pop();
-            int operand2 = s.top(); s.pop();
-            switch (*it) {
-                case '+': s.push(operand1 + operand2); break;
-                case '-': s.push(operand1 - operand2); break;
-                case '*': s.push(operand1 * operand2); break;
-                case '/': s.push(operand1 / operand2); break;
-                default:
-                    cerr << "Unknown operator: " << *it << endl;
-                    exit(EXIT_FAILURE);
+            int operand1 = st.pop();
+            int operand2 = st.pop();
+            switch (c) {
+                case '+': st.push(operand1 + operand2); break;
+                case '-': st.push(operand1 - operand2); break;
+                case '*': st.push(operand1 * operand2); break;
+                case '/': st.push(operand1 / operand2); break;
+                case '^': st.push(pow(operand1, operand2)); break;
             }
         }
-        ++it;
     }
-    return s.top();
+
+    return st.pop();
 }
 
 int main() {
-    string expression;
-    char type;
+    char postfix[MAX], prefix[MAX];
 
-    cout << "Enter the type of expression (p for postfix, f for prefix): ";
-    cin >> type;
-    cin.ignore(); // to ignore the newline character left by cin
+    cout << "Enter postfix expression: ";
+    cin >> postfix;
+    cout << "Postfix evaluation result: " << evaluatePostfix(postfix) << endl;
 
-    cout << "Enter the expression (with spaces between numbers and operators): ";
-    getline(cin, expression);
-
-    try {
-        if (type == 'p') {
-            int result = evaluatePostfix(expression);
-            cout << "Postfix expression result: " << result << endl;
-        } else if (type == 'f') {
-            int result = evaluatePrefix(expression);
-            cout << "Prefix expression result: " << result << endl;
-        } else {
-            cerr << "Invalid expression type. Use 'p' for postfix and 'f' for prefix." << endl;
-        }
-    } catch (const exception& e) {
-        cerr << "Error evaluating expression: " << e.what() << endl;
-    }
+    cout << "Enter prefix expression: ";
+    cin >> prefix;
+    cout << "Prefix evaluation result: " << evaluatePrefix(prefix) << endl;
 
     return 0;
 }
-
