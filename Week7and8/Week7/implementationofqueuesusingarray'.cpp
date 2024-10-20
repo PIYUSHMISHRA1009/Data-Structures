@@ -53,6 +53,17 @@ class Queue{
 			cout<<"Queue is empty"<<endl;
 		}
 	}
+	void display() {
+        if (isEmpty()) {
+            cout << "Queue is empty" << endl;
+        } else {
+            cout << "Queue elements: ";
+            for (int i = qfront; i < rear; i++) {
+                cout << arr[i] << " ";
+            }
+            cout << endl;
+        }
+    }
 };
 
 int main(){ 
@@ -63,6 +74,7 @@ int main(){
 	q.enque(3);
 	q.enque(2);
 	q.enque(1);
+	q.display();
 	q.front();
 	q.deque();
 	q.front();
