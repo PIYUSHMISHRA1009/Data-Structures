@@ -1,92 +1,137 @@
-#include <bits/stdc++.h>
+#include <iostream>
+
+#define MAX 100
 
 using namespace std;
 
-// Function to return precedence of operators
-int precedence(char op) {
-    if (op == '+' || op == '-') return 1;
-    if (op == '*' || op == '/') return 2;
-    if (op == '^') return 3;
-    return 0;
-}
+class Stack {
+private:
+    char arr[MAX];
+    int top;
 
-// Function to check if the character is an operator
+public:
+    Stack() { top = -1; }
+
+    void push(char c) {
+        if (top >= MAX - 1) {
+            cout << "Stack overflow" << endl;
+            return;
+        }
+        arr[++top] = c;
+    }
+
+    char pop() {
+        if (top < 0) {
+            cout << "Stack underflow" << endl;
+            return '\0';
+        }
+        return arr[top--];
+    }
+
+    char peek() {
+        if (top < 0) {
+            return '\0';
+        }
+        return arr[top];
+    }
+
+    bool isEmpty() {
+        return top == -1;
+    }
+};
+
 bool isOperator(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/' || c == '^';
+    return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^');
 }
 
-// Function to convert infix expression to postfix
-string infixToPostfix(const string& infix) {
-    stack<char> operators;
-    string postfix;
+int precedence(char c) {
+    if (c == '^')
+        return 3;
+    if (c == '*' || c == '/')
+        return 2;
+    if (c == '+' || c == '-')
+        return 1;
+    return -1;
+}
 
-    for (size_t i = 0; i < infix.length(); ++i) {
+void reverseString(char* str, int length) {
+    int start = 0, end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+void infixToPostfix(char* infix, char* postfix) {
+    Stack st;
+    int j = 0;
+
+    for (int i = 0; infix[i] != '\0'; i++) {
         char c = infix[i];
+
         if (isalnum(c)) {
-            postfix += c; // Add operands to output
+            postfix[j++] = c;
         } else if (c == '(') {
-            operators.push(c); // Push '(' to stack
+            st.push(c);
         } else if (c == ')') {
-            while (!operators.empty() && operators.top() != '(') {
-                postfix += operators.top();
-                operators.pop();
+            while (!st.isEmpty() && st.peek() != '(') {
+                postfix[j++] = st.pop();
             }
-            operators.pop(); // Pop '('
+            st.pop();
         } else if (isOperator(c)) {
-            while (!operators.empty() && precedence(operators.top()) >= precedence(c)) {
-                postfix += operators.top();
-                operators.pop();
+            while (!st.isEmpty() && precedence(st.peek()) >= precedence(c)) {
+                postfix[j++] = st.pop();
             }
-            operators.push(c);
+            st.push(c);
         }
     }
 
-    // Pop all the operators from the stack
-    while (!operators.empty()) {
-        postfix += operators.top();
-        operators.pop();
+    while (!st.isEmpty()) {
+        postfix[j++] = st.pop();
     }
 
-    return postfix;
+    postfix[j] = '\0';
 }
 
-// Function to reverse the string
-string reverseString(const string& str) {
-    string reversed;
-    for (int i = str.length() - 1; i >= 0; --i) {
-        reversed += str[i];
+void infixToPrefix(char* infix, char* prefix) {
+    int length = 0;
+
+    for (int i = 0; infix[i] != '\0'; i++) {
+        length++;
     }
-    return reversed;
-}
 
-// Function to convert infix expression to prefix
-string infixToPrefix(const string& infix) {
-    string reversedInfix = reverseString(infix);
-    for (size_t i = 0; i < reversedInfix.length(); ++i) {
-        char& c = reversedInfix[i];
-        if (c == '(') {
-            c = ')';
-        } else if (c == ')') {
-            c = '(';
+    reverseString(infix, length);
+
+    for (int i = 0; i < length; i++) {
+        if (infix[i] == '(') {
+            infix[i] = ')';
+        } else if (infix[i] == ')') {
+            infix[i] = '(';
         }
     }
 
-    string postfix = infixToPostfix(reversedInfix);
-    return reverseString(postfix);
+    char postfix[MAX];
+    infixToPostfix(infix, postfix);
+    reverseString(postfix, length);
+
+    for (int i = 0; i < length; i++) {
+        prefix[i] = postfix[i];
+    }
+
+    prefix[length] = '\0';
 }
 
-// Main function
 int main() {
-    string infixExpression;
+    char infix[MAX], postfix[MAX], prefix[MAX];
 
-    cout << "Enter an infix expression: ";
-    getline(cin, infixExpression); // Use getline to read the entire line
+    cout << "Enter infix expression: ";
+    cin >> infix;
 
-    // Remove spaces from the input expression
-    infixExpression.erase(remove_if(infixExpression.begin(), infixExpression.end(), ::isspace), infixExpression.end());
-
-    string postfix = infixToPostfix(infixExpression);
-    string prefix = infixToPrefix(infixExpression);
+    infixToPostfix(infix, postfix);
+    infixToPrefix(infix, prefix);
 
     cout << "Postfix Expression: " << postfix << endl;
     cout << "Prefix Expression: " << prefix << endl;
