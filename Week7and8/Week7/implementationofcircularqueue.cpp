@@ -1,81 +1,100 @@
 #include <iostream>
 #include <string>
+#define SIZE 5
+
 using namespace std;
 
 class CircularQueue {
-    int front, rear, size;
-    string* queue;
+private:
+    string items[SIZE];
+    int front;
+    int rear;
 
 public:
-    CircularQueue(int s) {
-        front = rear = -1;
-        size = s;
-        queue = new string[s];
+    CircularQueue() {
+        front = -1;
+        rear = -1;
     }
 
-    void insert(string data) {
-        if ((rear + 1) % size == front) {
-            cout << "Queue is full" << endl;
-        } else if (front == -1) {
-            front = rear = 0;
-            queue[rear] = data;
-        } else {
-            rear = (rear + 1) % size;
-            queue[rear] = data;
+    bool isFull() {
+        return (rear + 1) % SIZE == front;
+    }
+
+    bool isEmpty() {
+        return front == -1;
+    }
+
+    void enQueue(const string& value) {
+        if (isFull()) {
+            cout << "Queue Overflow" << endl;
+            return;
         }
+        
+        if (isEmpty()) {
+            front = 0;
+        }
+
+        rear = (rear + 1) % SIZE;
+        items[rear] = value;
+        cout << "Inserted: " << value << endl;
     }
 
-    string deleteElement() {
-        if (front == -1) {
-            cout << "Queue is empty" << endl;
+    string deQueue() {
+        if (isEmpty()) {
+            cout << "Queue Underflow" << endl;
             return "";
-        } else if (front == rear) {
-            string temp = queue[front];
-            front = rear = -1;
-            return temp;
-        } else {
-            string temp = queue[front];
-            front = (front + 1) % size;
-            return temp;
         }
+
+        string deletedValue = items[front];
+
+        if (front == rear) {
+            front = -1;
+            rear = -1;
+        } else {
+            front = (front + 1) % SIZE;
+        }
+
+        return deletedValue;
     }
 
     void display() {
-        if (front == -1) {
+        if (isEmpty()) {
             cout << "Queue is empty" << endl;
-        } else if (rear >= front) {
-            cout << "Queue elements: ";
-            for (int i = front; i <= rear; i++)
-                cout << queue[i] << " ";
-            cout << endl;
-        } else {
-            cout << "Queue elements: ";
-            for (int i = front; i < size; i++)
-                cout << queue[i] << " ";
-            for (int i = 0; i <= rear; i++)
-                cout << queue[i] << " ";
-            cout << endl;
+            return;
         }
-    }
 
-    ~CircularQueue() {
-        delete[] queue;
+        cout << "Circular Queue: ";
+        int i = front;
+
+        while (true) {
+            cout << items[i] << " ";
+            if (i == rear) break;
+            i = (i + 1) % SIZE;
+        }
+        
+        cout << endl;
     }
 };
 
-// Example usage
 int main() {
-    CircularQueue cq(5);
-    cq.insert("A");
-    cq.insert("B");
-    cq.insert("C");
-    cq.display();
-    cout << "Deleted element: " << cq.deleteElement() << endl;
-    cq.display();
-    cq.insert("D");
-    cq.insert("E");
-    cq.insert("F");
-    cq.display();
+    CircularQueue q;
+
+    q.enQueue("Hello");
+    q.enQueue("World");
+    q.display();
+
+    string deletedValue = q.deQueue();
+    if (!deletedValue.empty()) {
+        cout << "Deleted: " << deletedValue << endl;
+    }
+
+    q.display();
+
+    q.enQueue("Circular");
+    q.enQueue("Queue");
+    q.enQueue("Example");
+    
+    q.display();
+
     return 0;
 }
-
