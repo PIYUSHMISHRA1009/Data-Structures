@@ -1,155 +1,148 @@
 #include <iostream>
 using namespace std;
 
-struct Node {
-    int data;
-    Node* next;
-};
-
 class LinkedList {
+private:
+    class Node {
+    public:
+        int data;
+        Node* next;
+        Node(int value) : data(value), next(nullptr) {}
+    };
+
     Node* head;
 
 public:
-    LinkedList() {
-        head = nullptr;
+    LinkedList() : head(nullptr) {}
+
+    void insertAtBeginning(int value) {
+        head = new Node(value, head);
     }
 
-    void insertAtBeginning(int data) {
-        Node* newNode = new Node();
-        newNode->data = data;
-        newNode->next = head;
-        head = newNode;
-    }
-
-    void insertAtEnd(int data) {
-        Node* newNode = new Node();
-        newNode->data = data;
-        newNode->next = nullptr;
-        if (head == nullptr) {
-            head = newNode;
-        } else {
-            Node* temp = head;
-            while (temp->next != nullptr) {
-                temp = temp->next;
-            }
-            temp->next = newNode;
+    void insertAtEnd(int value) {
+        if (!head) {
+            head = new Node(value);
+            return;
         }
+
+        Node* temp = head;
+        while (temp->next) temp = temp->next;
+        temp->next = new Node(value);
     }
 
-    void insertBefore(int target, int data) {
-        if (head == nullptr) return;
+    void insertBefore(int target, int value) {
+        if (!head) return;
+
         if (head->data == target) {
-            insertAtBeginning(data);
+            insertAtBeginning(value);
             return;
         }
-        Node* newNode = new Node();
-        newNode->data = data;
+
         Node* temp = head;
-        while (temp->next != nullptr && temp->next->data != target) {
-            temp = temp->next;
+        while (temp->next && temp->next->data != target) temp = temp->next;
+
+        if (!temp->next) {
+            cout << "Element " << target << " not found." << endl;
+            return;
         }
-        if (temp->next != nullptr) {
-            newNode->next = temp->next;
-            temp->next = newNode;
-        }
+
+        Node* newNode = new Node(value);
+        newNode->next = temp->next;
+        temp->next = newNode;
     }
 
-    void insertAfter(int target, int data) {
+    void insertAfter(int target, int value) {
         Node* temp = head;
-        while (temp != nullptr && temp->data != target) {
-            temp = temp->next;
+        while (temp && temp->data != target) temp = temp->next;
+
+        if (!temp) {
+            cout << "Element " << target << " not found." << endl;
+            return;
         }
-        if (temp != nullptr) {
-            Node* newNode = new Node();
-            newNode->data = data;
-            newNode->next = temp->next;
-            temp->next = newNode;
-        }
+
+        Node* newNode = new Node(value);
+        newNode->next = temp->next;
+        temp->next = newNode;
     }
 
-    void deleteElement(int data) {
-        if (head == nullptr) return;
-        if (head->data == data) {
-            Node* temp = head;
+    void deleteElement(int value) {
+        if (!head) return;
+
+        if (head->data == value) {
+            Node* toDelete = head;
             head = head->next;
-            delete temp;
+            delete toDelete;
             return;
         }
+
         Node* temp = head;
-        while (temp->next != nullptr && temp->next->data != data) {
-            temp = temp->next;
+        while (temp->next && temp->next->data != value) temp = temp->next;
+
+        if (!temp->next) {
+            cout << "Element " << value << " not found." << endl;
+            return;
         }
-        if (temp->next != nullptr) {
-            Node* toDelete = temp->next;
-            temp->next = temp->next->next;
-            delete toDelete;
-        }
+
+        Node* toDelete = temp->next;
+        temp->next = toDelete->next;
+        delete toDelete;
     }
 
-    void printList() {
-        Node* temp = head;
-        while (temp != nullptr) {
+    void printList() const {
+        for (Node* temp = head; temp; temp = temp->next)
             cout << temp->data << " ";
-            temp = temp->next;
-        }
-        cout << endl;
+        
+        cout << (head ? "" : "List is empty.") << endl; // Print message if empty
+    }
+
+    ~LinkedList() { 
+        while (head) deleteElement(head->data);
     }
 };
 
 int main() {
     LinkedList list;
-    int choice, data, target;
 
-    while (true) {
-        cout << "\nMenu:\n";
-        cout << "1. Insert at beginning\n";
-        cout << "2. Insert at end\n";
-        cout << "3. Insert before an element\n";
-        cout << "4. Insert after an element\n";
-        cout << "5. Delete an element\n";
-        cout << "6. Print list\n";
-        cout << "7. Exit\n";
+    int choice, value, target;
+
+    do {
+        cout << "\nMenu:\n1. Insert at beginning\n2. Insert at end\n3. Insert before an element\n4. Insert after an element\n5. Delete an element\n6. Print the list\n7. Exit\n";
+        
         cout << "Enter your choice: ";
         cin >> choice;
 
         switch (choice) {
             case 1:
-                cout << "Enter data: ";
-                cin >> data;
-                list.insertAtBeginning(data);
-                break;
-            case 2:
-                cout << "Enter data: ";
-                cin >> data;
-                list.insertAtEnd(data);
-                break;
-            case 3:
-                cout << "Enter target element: ";
-                cin >> target;
-                cout << "Enter data: ";
-                cin >> data;
-                list.insertBefore(target, data);
-                break;
-            case 4:
-                cout << "Enter target element: ";
-                cin >> target;
-                cout << "Enter data: ";
-                cin >> data;
-                list.insertAfter(target, data);
-                break;
-            case 5:
-                cout << "Enter data to delete: ";
-                cin >> data;
-                list.deleteElement(data);
-                break;
-            case 6:
-                list.printList();
-                break;
-            case 7:
-                return 0;
-            default:
-                cout << "Invalid choice. Please try again.\n";
-        }
-    }
-}
+                cout << "Enter value to insert at beginning: ";
+                cin >> value; list.insertAtBeginning(value); break;
 
+            case 2:
+                cout << "Enter value to insert at end: ";
+                cin >> value; list.insertAtEnd(value); break;
+
+            case 3:
+                cout << "Enter target element and value to insert before: ";
+                cin >> target >> value; list.insertBefore(target, value); break;
+
+            case 4:
+                cout << "Enter target element and value to insert after: ";
+                cin >> target >> value; list.insertAfter(target, value); break;
+
+            case 5:
+                cout << "Enter value to delete: ";
+                cin >> value; list.deleteElement(value); break;
+
+            case 6:
+                list.printList(); break;
+
+            case 7:
+                cout << "Exiting..." << endl; break;
+
+            default:
+                cout << "Invalid choice. Please try again." << endl; 
+                break; 
+         }
+     } while (choice != 7);
+
+     return 0; 
+}
