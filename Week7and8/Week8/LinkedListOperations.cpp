@@ -2,7 +2,7 @@
 using namespace std;
 
 class LinkedList {
-private:
+public:
     class Node {
     public:
         int data;
@@ -12,11 +12,11 @@ private:
 
     Node* head;
 
-public:
     LinkedList() : head(nullptr) {}
 
     void insertAtBeginning(int value) {
-        head = new Node(value, head);
+        head = new Node(value);
+        head->next = head; // Point to itself if it's the only node
     }
 
     void insertAtEnd(int value) {
